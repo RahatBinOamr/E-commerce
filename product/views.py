@@ -38,8 +38,13 @@ def Add_To_Cart(request,pk):
     user= request.user
     product= Product.objects.get(pk=pk)
     cart , _ = Cart.objects.get_or_create(user=user,is_paid=False)
-    cart_item=CartItem.objects.create(cart=cart,product=product)
-    cart_item.save()
+    cart_item, created = CartItem.objects.get_or_create(pk=pk, cart=cart,product=product)
+    
+    if not created:
+        cart_item.quantity += 1
+        cart_item.save()
+    else:
+        cart_item.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER') )
 
 

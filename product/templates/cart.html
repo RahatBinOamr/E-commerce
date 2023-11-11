@@ -1,8 +1,8 @@
 {% extends "base.html" %} {% load static %} {% block content %}
+
 <div class="py-3 py-md-5">
   <div class="container mt-5">
-    <h2>Your Shopping Cart</h2>
-
+    {% if cart_items %}
     <div class="row mt-4">
       <div class="col-md-8">
         {% for p in cart_items %}
@@ -71,6 +71,14 @@
         </div>
       </div>
     </div>
+    {% else %}:
+    <h3 class="text-danger">Youre Not selected Product!!!!</h3>
+
+    <a href="{% url 'home'  %}">
+      <button class="btn btn-success btn-block mt-3 me-2">Back to shop</button>
+    </a>
+    {% endif %}
   </div>
 </div>
+
 {% endblock %}
