@@ -1,0 +1,20 @@
+<section>
+  <h4>Category</h4>
+
+  {% for category in categories %}
+
+  <div class="form-check">
+    <input
+      class="form-check-input"
+      name="category"
+      type="checkbox"
+      value=""
+      id="category"
+    />
+    <label class="form-check-label" for="category">
+      {{category.category_name}}
+    </label>
+  </div>
+
+  {% endfor %}
+</section>

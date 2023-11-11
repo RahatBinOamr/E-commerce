@@ -1,0 +1,18 @@
+<section>
+  <div class="card example-1 square scrollbar-cyan bordered-cyan">
+    <div class="card-body">
+      <h4>Brand</h4>
+      {% for brand in brands %}
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          name="{{brand.brand}}"
+          type="checkbox"
+          id="brand"
+        />
+        <label class="form-check-label" for="brand"> {{brand.brand}} </label>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
