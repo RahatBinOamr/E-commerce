@@ -3,6 +3,7 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from .models import Brand,Category,Status,Product,Cart,CartItem
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 # Create your views here.
 def HomePage(request):
     brands = Brand.objects.all()
@@ -10,8 +11,30 @@ def HomePage(request):
     statuses = Status.objects.all()
     products = Product.objects.all()
     count = CartItem.objects.all().count()
-    for p in products:
-        print(p)
+
+    # searching the  products 
+    query = request.GET.get('search')
+    if query:
+        products = Product.objects.filter(product_title__contains=query)
+    else:
+        products = Product.objects.all()
+
+
+
+
+
+    # pagination
+    items_per_page = 3
+    paginator = Paginator(products, items_per_page)
+    page = request.GET.get('page')
+    try:
+        products = paginator.page(page)
+    except PageNotAnInteger:
+        products = paginator.page(1)
+    except EmptyPage:
+        products = paginator.page(paginator.num_pages)
+
+
     context={
         'brands':brands,
         'categories':categories,
