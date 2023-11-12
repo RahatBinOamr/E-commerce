@@ -85,6 +85,20 @@ def reset_cart(request):
     CartItem.objects.all().delete()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER') )
 
+
+
+def check_out_cart(request):
+    cart_items=cart_items= CartItem.objects.all()
+    totalPrice=0;
+    for item in cart_items:
+        totalPrice=totalPrice+item.product.product_current_price*item.quantity
+    context={
+        'cart_items': cart_items,
+        'totalPrice': totalPrice
+    }
+    return render(request,'checkout.html',context)
+
+
 def DashboardPage(request):
     return render(request,'dashboard.html')
 

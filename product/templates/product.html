@@ -1,4 +1,6 @@
 <section>
+  {% if products %}
+
   <div class="row g-3">
     {% for product in products %}
     <div class="col-md-12 col-lg-4 mb-4 mb-lg-0">
@@ -51,4 +53,10 @@
     </div>
     {% endfor %}
   </div>
+  {% else %}:
+  <div>
+    <h3 class="text-danger">product not found</h3>
+  </div>
+
+  {% endif %}
 </section>

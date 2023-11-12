@@ -20,7 +20,7 @@ class Status(models.Model):
     status = models.CharField(max_length=200)
 
     def __str__(self):
-      return self.status
+        return self.status
 
 # Brand Models
 class Brand(models.Model):
@@ -30,11 +30,9 @@ class Brand(models.Model):
     brand = models.CharField(max_length=200)
 
     def __str__(self):
-      return self.brand
+        return self.brand
 
-  
-  
-  
+
 # Product models
 class Product(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -54,7 +52,7 @@ class Product(models.Model):
 
 
     def __str__(self) :
-      return self.product_title
+        return self.product_title
     
 
 
@@ -67,7 +65,7 @@ class Cart(models.Model):
     
 
     
-  
+
 
 
 class CartItem(models.Model):
@@ -79,7 +77,7 @@ class CartItem(models.Model):
     quantity = models.PositiveIntegerField(default=1)
 
     
-    
+
 
 
 
