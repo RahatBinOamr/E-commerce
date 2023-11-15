@@ -32,7 +32,7 @@ def HomePage(request):
 
 
     # pagination
-    items_per_page = 3
+    items_per_page = 6
     paginator = Paginator(products, items_per_page)
     page = request.GET.get('page')
     try:
@@ -124,12 +124,14 @@ def reset_cart(request):
 
 def check_out_cart(request):
     cart_items=cart_items= CartItem.objects.all()
+    count = CartItem.objects.all().count()
     totalPrice=0;
     for item in cart_items:
         totalPrice=totalPrice+item.product.product_current_price*item.quantity
     context={
         'cart_items': cart_items,
-        'totalPrice': totalPrice
+        'totalPrice': totalPrice,
+        'count': count
     }
     return render(request,'checkout.html',context)
 

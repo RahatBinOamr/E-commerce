@@ -3,11 +3,11 @@
   <div class="row justify-content-center">
     <div class="col-md-6">
       <div class="card">
-        <div class="card-header">Create Product</div>
+        <div class="card-header">Update Product</div>
         <div class="card-body">
           <form method="post" enctype="multipart/form-data">
             {% csrf_token %} {{ forms.as_p }}
-            <button type="submit">Add Product</button>
+            <button type="submit">Update Product</button>
           </form>
         </div>
       </div>
