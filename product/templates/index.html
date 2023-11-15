@@ -3,14 +3,16 @@
   {% include "banner.html" %}
   <div class="row mt-5">
     <div class="col-3">
-      <form mehtod="post">
-        {% csrf_token %} {% include "brand.html" %} <br />
-        {% include "category.html" %} <br />
+      {% csrf_token %} {% include "brand.html" %} <br />
+      {% include "category.html" %} <br />
 
-        {% include "status.html" %}
-      </form>
+      {% include "status.html" %}
     </div>
-    <div class="col-9">{% include "product.html" %}</div>
+    <div class="col-9">
+      {% include "product.html" %} <br />
+      <br />
+      {% include "pagination.html" %}
+    </div>
   </div>
 </section>
 {% endblock %}

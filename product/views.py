@@ -12,15 +12,23 @@ def HomePage(request):
     products = Product.objects.all()
     count = CartItem.objects.all().count()
 
+
+    # filtering by category,brand,status
+    BRAND_ID = request.GET.get('brands')
+    STATUS_ID = request.GET.get('status')
+    CATEGORY_ID = request.GET.get('categories')
+    if CATEGORY_ID or CATEGORY_ID or STATUS_ID:
+        products = Product.objects.filter(product_category=CATEGORY_ID).values()| Product.objects.filter(product_brand=BRAND_ID).values() | Product.objects.filter(product_status=STATUS_ID).values()
+    else:
+        products = Product.objects.all()
+
+
     # searching the  products 
     query = request.GET.get('search')
     if query:
         products = Product.objects.filter(product_title__contains=query)
     else:
         products = Product.objects.all()
-
-
-
 
 
     # pagination
@@ -49,10 +57,12 @@ def HomePage(request):
 def Product_DetailsPage(request,pk=None):
     product = Product.objects.get(id=pk)
     related_product = Product.objects.filter(product_category=product.product_category).values()
+    count = CartItem.objects.all().count()
     
     context={
         'product':product,
-        'related_product':related_product
+        'related_product':related_product,
+        'count':count
     }
     return render(request,'product_details.html',context)
 
@@ -72,7 +82,9 @@ def Add_To_Cart(request,pk):
 
 
 def Product_Cart(request):
+    cart = Cart.objects.filter(user=request.user)
     cart_items= CartItem.objects.all()
+    count = CartItem.objects.all().count()
     totalPrice =[]
     for cart_item in cart_items:
         if cart_item.product.product_current_price:
@@ -80,7 +92,7 @@ def Product_Cart(request):
     context={
         'cart_items': cart_items,
         'totalPrice': sum(totalPrice),
-        
+        'count':count
     }
     return render(request,'cart.html', context)
 
@@ -122,8 +134,7 @@ def check_out_cart(request):
     return render(request,'checkout.html',context)
 
 
-def DashboardPage(request):
-    return render(request,'dashboard.html')
+
 
 
 

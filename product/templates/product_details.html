@@ -58,12 +58,11 @@
         
           </div>
           {% if product.product_quantity == 0 %}
-          <a href="#" class="btn btn-secondary shadow-0 disabled"> Buy now </a>
+          
           <a href="#" class="btn btn-secondary shadow-0 disabled">
             <i class="me-1 fa fa-shopping-basket"></i> Add to cart
           </a>
           {% else %}
-          <a href="#" class="btn btn-warning shadow-0"> Buy now </a>
           <a href="{% url 'add_to_cart' product.id %}" class="btn btn-primary shadow-0">
             <i class="me-1 fa fa-shopping-basket"></i> Add to cart
           </a>
