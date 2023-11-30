@@ -39,7 +39,7 @@ def product_collections(request):
     if query:
         products = Product.objects.filter(product_title__contains=query)
     else:
-        products = Product.objects.all()
+        products = Product.objects.all().order_by('-id')
 
 
 

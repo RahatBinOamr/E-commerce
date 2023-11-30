@@ -76,8 +76,8 @@
 </section>
 <!-- content -->
 
-<section >
-  <div class="container">
+<section class="container">
+  <div >
     <div class="row gx-4">
       <div class="col-lg-8 mb-4">
         <div class="border rounded-2 px-3 py-2 bg-white">
@@ -133,5 +133,22 @@
       </div>
     </div>
   </div>
+  <!-- Add a new review form -->
+    <div>
+       <h2>Reviews</h2>
+  {% for review in reviews %}
+    <p><b>{{ review.user.username }}</b> - {{ review.comment }}</p> 
+    
+  {% endfor %}
+
+  <h2>Add a Review</h2>
+  <form method="post" action="{% url 'Product_Details' product.id %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Submit</button>
+  </form>
+    </div>
 </section>
+
 {% endblock %}
+

@@ -2,34 +2,41 @@ from django.shortcuts import get_object_or_404, render,redirect
 from django.http import HttpResponseRedirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from .models import Brand,Category,Status,Product,Cart,CartItem
+from .models import Brand,Category,Status,Product,Cart,CartItem,Review
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.db.models import Q
+from product.forms import ReviewForm
 # Create your views here.
 def HomePage(request):
     brands = Brand.objects.all()
     categories = Category.objects.all()
     statuses = Status.objects.all()
-    products = Product.objects.all()
     count = CartItem.objects.all().count()
+    user_authenticated = User.is_authenticated
+    user_active = User.is_active
+
+    # searching the  products 
+    if request.method == 'GET':
+            query_s = request.GET.get('search')
+            query_c = request.GET.get('search')
+            query_b = request.GET.get('search')
+            if query_s or query_c or query_b:
+                querySet= (Q(product_title__contains =query_s)) | (Q(product_brand__brand=query_b)) | (Q(product_category__category_name=query_c))
+                products = Product.objects.filter(querySet).distinct()
+            else:
+                products = Product.objects.all().order_by('?')
 
 
     # filtering by category,brand,status
-    BRAND_ID = request.GET.get('brands')
-    STATUS_ID = request.GET.get('status')
-    CATEGORY_ID = request.GET.get('categories')
-    if CATEGORY_ID or CATEGORY_ID or STATUS_ID:
-        products = Product.objects.filter(product_category=CATEGORY_ID).values()| Product.objects.filter(product_brand=BRAND_ID).values() | Product.objects.filter(product_status=STATUS_ID).values()
-    else:
-        products = Product.objects.all()
-
-
-    # searching the  products 
-    query = request.GET.get('search')
-    if query:
-        products = Product.objects.filter(product_title__contains=query)
-    else:
-        products = Product.objects.all()
-
+    if request.method == 'GET':
+            selected_category = request.GET.get('category')
+            selected_brand = request.GET.get('brand')
+            selected_status = request.GET.get('status')
+            if selected_category or selected_brand or selected_status:
+                querySet= (Q(product_category__category_name =selected_category)) | (Q(product_brand__brand=selected_brand)) | (Q(product_status__status=selected_status))
+                products = Product.objects.filter(querySet).distinct()
+            else:
+                products = Product.objects.all().order_by('?')
 
     # pagination
     items_per_page = 6
@@ -48,21 +55,37 @@ def HomePage(request):
         'categories':categories,
         'statuses':statuses,
         'products':products,
-        'count':count
+        'count':count,
+        'user_authenticated':user_authenticated,
+        'user_active':user_active
     
     }
     return render(request, 'index.html',context)
 
 
 def Product_DetailsPage(request,pk=None):
-    product = Product.objects.get(id=pk)
+    product = get_object_or_404(Product, id=pk)
     related_product = Product.objects.filter(product_category=product.product_category).values()
     count = CartItem.objects.all().count()
-    
+    reviews = Review.objects.filter(product=product)
+
+    if request.method == 'POST':
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.user = request.user  # Assuming you have user authentication
+            review.product = product
+            review.save()
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER') )
+
+    else:
+        form = ReviewForm()
     context={
         'product':product,
         'related_product':related_product,
-        'count':count
+        'count':count,
+        'form':form,
+        'reviews':reviews
     }
     return render(request,'product_details.html',context)
 

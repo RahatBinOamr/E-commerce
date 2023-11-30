@@ -64,10 +64,6 @@ class Cart(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(User,on_delete=models.CASCADE)
     is_paid = models.BooleanField(default=False)
-    
-
-    
-
 
 
 class CartItem(models.Model):
@@ -79,7 +75,14 @@ class CartItem(models.Model):
     quantity = models.PositiveIntegerField(default=1)
 
     
+class Review(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    comment = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return f'{self.user.username} - {self.product.product_title}'
 
 
 

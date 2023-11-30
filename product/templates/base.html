@@ -123,7 +123,7 @@
 
           <div class="col-lg-7 col-sm-4 col-8">
             <div class="d-flex float-end">
-              <form class="form-inline me-2">
+              <form method="get" class="form-inline me-2">
                 <div class="input-group">
                   <input
                     type="text"
@@ -147,27 +147,7 @@
                 </a>
               </div>
 
-              {% comment %}
-              <div>
-                <a
-                  href="{% url 'dashboard' %}"
-                  class="border rounded py-1 px-3 nav-link d-flex align-items-center me-1"
-                >
-                  <i class="fas fa-tachometer-alt me-2"></i>
-                  <p class="d-none d-md-block mb-0">dashboard</p>
-                </a>
-              </div>
-              {% endcomment %}
-
-              <div>
-                <a
-                  href=" {% url 'login' %} "
-                  class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center"
-                >
-                  <i class="fas fa-user-alt m-1 me-md-2"></i>
-                  <p class="d-none d-md-block mb-0">Sign in</p>
-                </a>
-              </div>
+              {% if user_authenticated and user_active %}
               <div>
                 <a
                   href=" {% url 'logout' %} "
@@ -177,6 +157,19 @@
                   <p class="d-none d-md-block mb-0">logout</p>
                 </a>
               </div>
+
+              {% else %}
+              <div>
+                <a
+                  href=" {% url 'login' %} "
+                  class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center"
+                >
+                  <i class="fas fa-user-alt m-1 me-md-2"></i>
+                  <p class="d-none d-md-block mb-0">Sign in</p>
+                </a>
+              </div>
+
+              {% endif %}
             </div>
           </div>
         </div>

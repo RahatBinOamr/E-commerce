@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category,Brand,Product,Status,CartItem
+from .models import Category,Brand,Product,Status,CartItem,Review
 
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -27,3 +27,7 @@ class CartItemAdmin(admin.ModelAdmin):
   list_display = ('cart','product','quantity')
 
 admin.site.register(CartItem,CartItemAdmin)
+
+class ReviewAdmin(admin.ModelAdmin):
+  list_display=('comment',)
+admin.site.register(Review,ReviewAdmin)

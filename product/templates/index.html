@@ -3,10 +3,57 @@
   {% include "banner.html" %}
   <div class="row mt-5">
     <div class="col-3">
-      {% csrf_token %} {% include "brand.html" %} <br />
-      {% include "category.html" %} <br />
+      <form method="get" action="">
+        <h3>Category:</h3>
+        {% for category in categories %}
+        <div class="form-check">
+          <input
+          type="checkbox"
+          name="category"
+          value="{{ category.category_name }}" 
+          {% if category.category_name in selected_categories %}
+          checked
+          {% endif %}
+        />
+        {{ category.category_name }}
+      </div> 
+        {% endfor %}
 
-      {% include "status.html" %}
+        <br /> <br> 
+
+        <h3>Brand:</h3>
+        {% for brand in brands %}
+        <div class="form-check">
+          
+          <input
+          type="checkbox"
+          name="brand"
+          value="{{brand.brand}}"
+          {% if brand.brand in selected_brands %}
+          checked
+          {% endif %}
+        />{{ brand.brand }}
+        </div>
+        {% endfor %}
+
+        <br /> <br>
+
+        <h3>Status:</h3>
+        {% for status in statuses %} 
+        <div class="form-check">
+          <input type="radio"
+          name="status" 
+          value="{{status.status }}"
+          {% if status.status == selected_status %}
+          checked
+          {% endif %}> 
+          {{ status.status }} </div>
+          {% endfor %}
+
+        <br />
+
+        <button class="btn btn-info" type="submit">Filter</button>
+      </form>
     </div>
     <div class="col-9">
       {% include "product.html" %} <br />
