@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404, render,redirect
 from django.http import HttpResponseRedirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from .models import Brand,Category,Status,Product,Cart,CartItem,Review
+from .models import Brand,Category,Status,Product,CartItem,Review
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
 from product.forms import ReviewForm
@@ -11,7 +11,7 @@ def HomePage(request):
     brands = Brand.objects.all()
     categories = Category.objects.all()
     statuses = Status.objects.all()
-    count = CartItem.objects.all().count()
+    count = CartItem.objects.filter(user=request.user).count()
     user_authenticated = User.is_authenticated
     user_active = User.is_active
 
@@ -66,7 +66,7 @@ def HomePage(request):
 def Product_DetailsPage(request,pk=None):
     product = get_object_or_404(Product, id=pk)
     related_product = Product.objects.filter(product_category=product.product_category).values()
-    count = CartItem.objects.all().count()
+    count = CartItem.objects.filter(user=request.user).count()
     reviews = Review.objects.filter(product=product)
 
     if request.method == 'POST':
@@ -90,12 +90,9 @@ def Product_DetailsPage(request,pk=None):
     return render(request,'product_details.html',context)
 
 
-def Add_To_Cart(request,pk):
-    user= request.user
+def Add_To_Cart(request,pk=None):
     product= Product.objects.get(pk=pk)
-    cart , _ = Cart.objects.get_or_create(user=user,is_paid=False)
-    cart_item, created = CartItem.objects.get_or_create(pk=pk, cart=cart,product=product)
-    
+    cart_item, created = CartItem.objects.get_or_create( user=request.user,product=product)
     if not created:
         cart_item.quantity += 1
         cart_item.save()
@@ -105,9 +102,8 @@ def Add_To_Cart(request,pk):
 
 
 def Product_Cart(request):
-    cart = Cart.objects.filter(user=request.user)
-    cart_items= CartItem.objects.all()
-    count = CartItem.objects.all().count()
+    cart_items= CartItem.objects.filter(user=request.user)
+    count = CartItem.objects.filter(user=request.user).count()
     totalPrice =[]
     for cart_item in cart_items:
         if cart_item.product.product_current_price:
@@ -146,8 +142,8 @@ def reset_cart(request):
 
 
 def check_out_cart(request):
-    cart_items=cart_items= CartItem.objects.all()
-    count = CartItem.objects.all().count()
+    cart_items=cart_items= CartItem.objects.filter(user=request.user)
+    count = CartItem.objects.filter(user=request.user).count()
     totalPrice=0;
     for item in cart_items:
         totalPrice=totalPrice+item.product.product_current_price*item.quantity
@@ -157,12 +153,6 @@ def check_out_cart(request):
         'count': count
     }
     return render(request,'checkout.html',context)
-
-
-
-
-
-
 
 
 
