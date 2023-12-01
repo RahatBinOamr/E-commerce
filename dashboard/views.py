@@ -11,7 +11,7 @@ def add_product(request):
   categories= Category.objects.all()
   statuses= Status.objects.all()
   brands= Brand.objects.all()
-  count = CartItem.objects.all().count()
+  count = CartItem.objects.filter(user=request.user).count()
   if request.method == "POST":
       forms = ProductForm(request.POST, request.FILES)
       if forms.is_valid():
@@ -30,7 +30,7 @@ def add_product(request):
 
 def product_collections(request):
     products=Product.objects.all()
-    count = CartItem.objects.all().count()
+    count = CartItem.objects.filter(user=request.user).count()
 
 
 

@@ -1,5 +1,6 @@
 from django import forms
 from product.models import Product
+from ckeditor.fields import RichTextField
 
 class ProductForm(forms.ModelForm):
     class Meta:
@@ -12,7 +13,7 @@ class ProductForm(forms.ModelForm):
             'product_quantity': forms.NumberInput({'class': 'form-control'}),
             'product_rating': forms.NumberInput({'class': 'form-control'}),
             'product_offer': forms.NumberInput({'class': 'form-control'}),
-            'product_description': forms.Textarea({'class': 'form-control'}),
+            'product_description': RichTextField(),
             'product_image': forms.FileInput({'class': 'form-control'}),
             'product_category': forms.Select({'class': 'form-control'}),
             'product_status': forms.Select({'class': 'form-control'}),

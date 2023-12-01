@@ -2,7 +2,7 @@
 from django.db import models
 import uuid
 from django.contrib.auth.models import User
-
+from ckeditor.fields import RichTextField
 
 # category models
 class Category(models.Model):
@@ -46,7 +46,7 @@ class Product(models.Model):
     product_quantity=models.IntegerField(default=0)
     product_rating = models.IntegerField(default=0)
     product_offer=models.IntegerField(default=0)
-    product_description = models.TextField()
+    product_description =RichTextField(null=True, blank=True)
     product_image = models.ImageField(upload_to='productImages/')
     product_category = models.ForeignKey(Category, on_delete=models.CASCADE)
     product_status = models.ForeignKey(Status, on_delete=models.CASCADE)

@@ -6,7 +6,7 @@
         <div class="card-header">Update Product</div>
         <div class="card-body">
           <form method="post" enctype="multipart/form-data">
-            {% csrf_token %} {{ forms.as_p }}
+            {% csrf_token %}  {{forms.media}} {{ forms.as_p }}
             <button class="btn btn-info" type="submit">Update Product</button>
           </form>
         </div>
