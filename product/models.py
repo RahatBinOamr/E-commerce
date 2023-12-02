@@ -3,7 +3,7 @@ from django.db import models
 import uuid
 from django.contrib.auth.models import User
 from ckeditor.fields import RichTextField
-
+from UserProfile.models import UserProfile
 # category models
 class Category(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -72,7 +72,8 @@ class CartItem(models.Model):
     
 class Review(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True,blank=True)
+    profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE,null=True, blank=True)
     comment = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 

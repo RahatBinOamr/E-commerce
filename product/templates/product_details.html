@@ -135,13 +135,26 @@
   </div>
   <!-- Add a new review form -->
     <div>
-       <h2>Reviews</h2>
+       <h3 class="mb-2">Reviews</h3>
   {% for review in reviews %}
-    <p><b>{{ review.user.username }}</b> - {{ review.comment }}</p> 
-    
+  
+<div class="d-flex align-items-center">
+                {% if review.profile.profile_image.url %}
+                <img src="{{ review.profile.profile_image.url }}" alt="User Image" class="img-fluid rounded-circle mb-3 me-2"
+                style="width:50px; height:50px"
+                >
+                {% else %}
+                <i class="fas fa-user-alt m-1 mb-3 me-2"></i>
+                {% endif %}
+                <div><b>{{ review.user.username }}</b>
+                <p>
+                    {{ review.comment }}
+                </p></div>
+            </div>
   {% endfor %}
 
-  <h2>Add a Review</h2>
+
+  
   <form method="post" action="{% url 'Product_Details' product.id %}">
     {% csrf_token %}
     {{ form.as_p }}

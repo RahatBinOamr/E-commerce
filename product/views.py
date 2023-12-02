@@ -2,16 +2,19 @@ from django.shortcuts import get_object_or_404, render,redirect
 from django.http import HttpResponseRedirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
+
+from UserProfile.models import UserProfile
 from .models import Brand,Category,Status,Product,CartItem,Review
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
-from product.forms import ReviewForm
+from product.forms import ReviewForm, UserProfileForm,UserRegistrationForm,LoginForm
 # Create your views here.
 def HomePage(request):
     brands = Brand.objects.all()
     categories = Category.objects.all()
     statuses = Status.objects.all()
     count = CartItem.objects.filter(user=request.user).count()
+    user_profile = UserProfile.objects.get(user=request.user)
     user_authenticated = User.is_authenticated
     user_active = User.is_active
 
@@ -57,7 +60,8 @@ def HomePage(request):
         'products':products,
         'count':count,
         'user_authenticated':user_authenticated,
-        'user_active':user_active
+        'user_active':user_active,
+        'user_profile':user_profile,
     
     }
     return render(request, 'index.html',context)
@@ -67,14 +71,16 @@ def Product_DetailsPage(request,pk=None):
     product = get_object_or_404(Product, id=pk)
     related_product = Product.objects.filter(product_category=product.product_category).values()
     count = CartItem.objects.filter(user=request.user).count()
+    user_profile = UserProfile.objects.get(user=request.user)
     reviews = Review.objects.filter(product=product)
-
+    
     if request.method == 'POST':
         form = ReviewForm(request.POST)
         if form.is_valid():
             review = form.save(commit=False)
-            review.user = request.user  # Assuming you have user authentication
+            review.user = request.user  
             review.product = product
+            review.profile = user_profile
             review.save()
             return HttpResponseRedirect(request.META.get('HTTP_REFERER') )
 
@@ -85,7 +91,8 @@ def Product_DetailsPage(request,pk=None):
         'related_product':related_product,
         'count':count,
         'form':form,
-        'reviews':reviews
+        'reviews':reviews,
+        'user_profile':user_profile
     }
     return render(request,'product_details.html',context)
 
@@ -104,6 +111,7 @@ def Add_To_Cart(request,pk=None):
 def Product_Cart(request):
     cart_items= CartItem.objects.filter(user=request.user)
     count = CartItem.objects.filter(user=request.user).count()
+    user_profile = UserProfile.objects.get(user=request.user)
     totalPrice =[]
     for cart_item in cart_items:
         if cart_item.product.product_current_price:
@@ -111,7 +119,8 @@ def Product_Cart(request):
     context={
         'cart_items': cart_items,
         'totalPrice': sum(totalPrice),
-        'count':count
+        'count':count,
+        'user_profile': user_profile
     }
     return render(request,'cart.html', context)
 
@@ -144,58 +153,55 @@ def reset_cart(request):
 def check_out_cart(request):
     cart_items=cart_items= CartItem.objects.filter(user=request.user)
     count = CartItem.objects.filter(user=request.user).count()
+    user_profile = UserProfile.objects.get(user=request.user)
     totalPrice=0;
     for item in cart_items:
         totalPrice=totalPrice+item.product.product_current_price*item.quantity
     context={
         'cart_items': cart_items,
         'totalPrice': totalPrice,
-        'count': count
+        'count': count,
+        'user_profile': user_profile
     }
     return render(request,'checkout.html',context)
 
 
 
 def Register(request):
-    m = ""
-    if request.method == "POST":
-        name = request.POST['name']
-        email = request.POST['email']
-        pass1 = request.POST['password1']
-        pass2 = request.POST['password2']
-        print(name, email, pass1, pass2)
-        if (pass1 != pass2):
-            m = "wrong password!!!"
-        else:
-            signUp = User.objects.create_user(
-                username=name,
-                email=email,
-                password=pass1
-            )
-            signUp.save()
-            return redirect('login')
+    if request.method == 'POST':
+        user_form = UserRegistrationForm(request.POST)
+        profile_form = UserProfileForm(request.POST, request.FILES)
 
-    return render(request, 'register.html', {m: m})
+        if user_form.is_valid() and profile_form.is_valid():
+            user = user_form.save()
+            profile = profile_form.save(commit=False)
+            profile.user = user
+            profile.save()
+            login(request, user)
+            return redirect('home') 
+    else:
+        user_form = UserRegistrationForm()
+        profile_form = UserProfileForm()
+    return render(request, 'register.html', {'user_form': user_form, 'profile_form': profile_form})
 
 
 def Login(request):
-    m = ""
-    if request.method == "POST":
-        name = request.POST['name']
-        password = request.POST['password']
-        loginUser = authenticate(
-            request,
-            username=name,
-            password=password
-        )
-        if loginUser is not None:
-            login(request, loginUser)
-            return redirect('/')
-        else:
-            m = "something went wrong"
-    return render(request, 'login.html', {'m': m})
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect('home')  # Redirect to the home page or any other desired page after login
+            else:
+                form.add_error(None, 'Invalid login credentials')
+    else:
+        form = LoginForm()
+    return render(request, 'login.html', {'form': form})
 
 
 def LogOut(request):
     logout(request)
-    return redirect('login')
+    return redirect('login') 

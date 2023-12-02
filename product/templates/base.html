@@ -147,29 +147,54 @@
                 </a>
               </div>
 
-              {% if user_authenticated and user_active %}
-              <div>
+              <div class="nav-item dropdown">
                 <a
-                  href=" {% url 'logout' %} "
-                  class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center"
+                  class="nav-link dropdown-toggle"
+                  href="#"
+                  id="navbarDropdown"
+                  role="button"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
                 >
-                  <i class="fas fa-user-alt m-1 me-md-2"></i>
-                  <p class="d-none d-md-block mb-0">logout</p>
+                  <img
+                    src="{{ user_profile.profile_image.url }}"
+                    class=" rounded-circle"
+                    style="width: 40px; height: 40px"
+                    alt=""
+                  />
                 </a>
-              </div>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <!-- Add dropdown items here, such as profile, settings, logout, etc. -->
+                  <a class="dropdown-item" href="{% url 'profile' %}"
+                    >Profile</a
+                  >
+                  <div class="dropdown-divider"></div>
+                  {% if user_authenticated and user_active %}
+                  <div>
+                    <a
+                      href=" {% url 'logout' %} "
+                      class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center"
+                    >
+                      <i class="fas fa-user-alt m-1 me-md-2"></i>
+                      <p class="d-none d-md-block mb-0">logout</p>
+                    </a>
+                  </div>
 
-              {% else %}
-              <div>
-                <a
-                  href=" {% url 'login' %} "
-                  class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center"
-                >
-                  <i class="fas fa-user-alt m-1 me-md-2"></i>
-                  <p class="d-none d-md-block mb-0">Sign in</p>
-                </a>
-              </div>
+                  {% else %}
+                  <div>
+                    <a
+                      href=" {% url 'login' %} "
+                      class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center"
+                    >
+                      <i class="fas fa-user-alt m-1 me-md-2"></i>
+                      <p class="d-none d-md-block mb-0">Sign in</p>
+                    </a>
+                  </div>
 
-              {% endif %}
+                  {% endif %}
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -227,5 +252,9 @@
         el.classList.toggle('toggled');
       };
     </script>
+    <!-- Add these scripts at the end of your HTML file, just before </body> -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   </body>
 </html>

@@ -1,0 +1,18 @@
+{% extends 'base.html' %} {% block content %}
+<div class="container mx-auto">
+  <h2>{{ user_profile.user.username }}'s Profile</h2>
+  <img
+    src="{{ user_profile.profile_image.url }}"
+    alt="Profile Image"
+    style="max-width: 150px"
+  />
+  <p><strong>Name:</strong> {{ user_profile.user.username }}</p>
+  <p><strong>Name:</strong> {{ user_profile.user.email }}</p>
+  <p><strong>Address:</strong> {{ user_profile.address }}</p>
+  <p><strong>Mobile Number:</strong> {{ user_profile.mobile_number }}</p>
+  <a href="{% url 'update_profile' %}">
+    <button class="btn btn-info">update</button>
+  </a>
+</div>
+
+{% endblock %}

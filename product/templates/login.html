@@ -1,50 +1,10 @@
-{% extends "base.html" %} {% block content %}
-<div class="">
-  <div class="container mt-5 mb-5">
-    <div class="row justify-content-center">
-      <div class="col-md-6">
-        <div class="card">
-          <div class="card-header">Login</div>
-          <div class="card-body">
-            <form method="post">
-              {% csrf_token %}
-              <div class="mb-3">
-                <label for="username" class="form-label">Username</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="username"
-                  name="name"
-                  placeholder="Enter your username"
-                />
-              </div>
-              <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input
-                  type="password"
-                  class="form-control"
-                  id="password"
-                  name="password"
-                  placeholder="Enter your password"
-                />
-              </div>
-              <div>
-                <label class="form-check-label text-danger" for="form2Example3">
-                  {{m}}
-                </label>
-              </div>
-              <button type="submit" class="btn btn-primary">Login</button>
-              <div>
-                <label class="form-check-label" for="form2Example3">
-                  If you Have an no please
-                  <a href="{% url 'register' %}">Register</a>
-                </label>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+{% extends 'base.html' %} {% block content %}
+<div class="container">
+  <h2>Login</h2>
+  <form method="post">
+    {% csrf_token %} {{ form.as_p }}
+    <button type="submit">Login</button>
+    <p>if you have an account please <a href="{% url 'register'  %}">register</a></p>
+  </form>
 </div>
 {% endblock %}
