@@ -1,9 +1,9 @@
-
 from django.db import models
 import uuid
 from django.contrib.auth.models import User
+
 from ckeditor.fields import RichTextField
-from UserProfile.models import UserProfile
+from UserProfile.models import Profile
 # category models
 class Category(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -40,7 +40,7 @@ class Product(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    product_title= models.CharField(max_length=250)
+    product_title= models.CharField(max_length=250,blank=True,null=True)
     product_current_price=models.IntegerField(default=0)
     product_previous_price=models.IntegerField(default=0)
     product_quantity=models.IntegerField(default=0)
@@ -51,7 +51,7 @@ class Product(models.Model):
     product_category = models.ForeignKey(Category, on_delete=models.CASCADE)
     product_status = models.ForeignKey(Status, on_delete=models.CASCADE)
     product_brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
-
+    
 
     def __str__(self) :
         return self.product_title
@@ -68,12 +68,12 @@ class CartItem(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE,null=True)
     product=models.ForeignKey(Product,on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
-
+    is_paid = models.BooleanField(default=False)
     
 class Review(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True,blank=True)
-    profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE,null=True, blank=True)
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE,null=True, blank=True)
     comment = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 

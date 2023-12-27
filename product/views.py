@@ -1,22 +1,24 @@
-from django.shortcuts import get_object_or_404, render,redirect
+from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponseRedirect
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login, logout
-
-from UserProfile.models import UserProfile
+from UserProfile.models import Profile
 from .models import Brand,Category,Status,Product,CartItem,Review
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
-from product.forms import ReviewForm, UserProfileForm,UserRegistrationForm,LoginForm
+from product.forms import ReviewForm
+from django.contrib.auth.decorators import login_required
+
+
+
 # Create your views here.
+
 def HomePage(request):
+    
     brands = Brand.objects.all()
     categories = Category.objects.all()
     statuses = Status.objects.all()
-    count = CartItem.objects.filter(user=request.user).count()
-    user_profile = UserProfile.objects.get(user=request.user)
-    user_authenticated = User.is_authenticated
-    user_active = User.is_active
+
+
 
     # searching the  products 
     if request.method == 'GET':
@@ -52,16 +54,14 @@ def HomePage(request):
     except EmptyPage:
         products = paginator.page(paginator.num_pages)
 
-
+    # Upcoming Product
+    upcoming = Product.objects.filter(product_status__status="Up-Comming")
     context={
         'brands':brands,
         'categories':categories,
         'statuses':statuses,
         'products':products,
-        'count':count,
-        'user_authenticated':user_authenticated,
-        'user_active':user_active,
-        'user_profile':user_profile,
+        'upcoming':upcoming,
     
     }
     return render(request, 'index.html',context)
@@ -69,9 +69,9 @@ def HomePage(request):
 
 def Product_DetailsPage(request,pk=None):
     product = get_object_or_404(Product, id=pk)
-    related_product = Product.objects.filter(product_category=product.product_category).values()
-    count = CartItem.objects.filter(user=request.user).count()
-    user_profile = UserProfile.objects.get(user=request.user)
+    related_product = Product.objects.filter(Q(product_category=product.product_category)| Q(product_brand=product.product_brand)).exclude(id=product.id)
+
+
     reviews = Review.objects.filter(product=product)
     
     if request.method == 'POST':
@@ -80,7 +80,7 @@ def Product_DetailsPage(request,pk=None):
             review = form.save(commit=False)
             review.user = request.user  
             review.product = product
-            review.profile = user_profile
+
             review.save()
             return HttpResponseRedirect(request.META.get('HTTP_REFERER') )
 
@@ -89,10 +89,10 @@ def Product_DetailsPage(request,pk=None):
     context={
         'product':product,
         'related_product':related_product,
-        'count':count,
+  
         'form':form,
         'reviews':reviews,
-        'user_profile':user_profile
+        
     }
     return render(request,'product_details.html',context)
 
@@ -111,7 +111,7 @@ def Add_To_Cart(request,pk=None):
 def Product_Cart(request):
     cart_items= CartItem.objects.filter(user=request.user)
     count = CartItem.objects.filter(user=request.user).count()
-    user_profile = UserProfile.objects.get(user=request.user)
+    
     totalPrice =[]
     for cart_item in cart_items:
         if cart_item.product.product_current_price:
@@ -120,7 +120,7 @@ def Product_Cart(request):
         'cart_items': cart_items,
         'totalPrice': sum(totalPrice),
         'count':count,
-        'user_profile': user_profile
+        
     }
     return render(request,'cart.html', context)
 
@@ -152,56 +152,21 @@ def reset_cart(request):
 
 def check_out_cart(request):
     cart_items=cart_items= CartItem.objects.filter(user=request.user)
-    count = CartItem.objects.filter(user=request.user).count()
-    user_profile = UserProfile.objects.get(user=request.user)
+
     totalPrice=0;
     for item in cart_items:
         totalPrice=totalPrice+item.product.product_current_price*item.quantity
     context={
         'cart_items': cart_items,
         'totalPrice': totalPrice,
-        'count': count,
-        'user_profile': user_profile
     }
     return render(request,'checkout.html',context)
 
 
 
-def Register(request):
-    if request.method == 'POST':
-        user_form = UserRegistrationForm(request.POST)
-        profile_form = UserProfileForm(request.POST, request.FILES)
-
-        if user_form.is_valid() and profile_form.is_valid():
-            user = user_form.save()
-            profile = profile_form.save(commit=False)
-            profile.user = user
-            profile.save()
-            login(request, user)
-            return redirect('home') 
-    else:
-        user_form = UserRegistrationForm()
-        profile_form = UserProfileForm()
-    return render(request, 'register.html', {'user_form': user_form, 'profile_form': profile_form})
 
 
-def Login(request):
-    if request.method == 'POST':
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
-            user = authenticate(request, username=username, password=password)
-            if user is not None:
-                login(request, user)
-                return redirect('home')  # Redirect to the home page or any other desired page after login
-            else:
-                form.add_error(None, 'Invalid login credentials')
-    else:
-        form = LoginForm()
-    return render(request, 'login.html', {'form': form})
 
 
-def LogOut(request):
-    logout(request)
-    return redirect('login') 
+
+

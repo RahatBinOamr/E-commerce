@@ -3,6 +3,7 @@ from django.shortcuts import get_object_or_404, render,redirect
 from product.models import Brand,Status,Category,CartItem,Product
 from dashboard.forms import ProductForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.db.models import Q
 # Create your views here.
 def dashboard(request):
   return render(request, 'dashboard.html')
@@ -37,7 +38,7 @@ def product_collections(request):
   # searching the  products 
     query = request.GET.get('search')
     if query:
-        products = Product.objects.filter(product_title__contains=query)
+        products = Product.objects.filter(Q(product_title__contains=query) )
     else:
         products = Product.objects.all().order_by('-id')
 

@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'dashboard',
     'UserProfile',
     'ckeditor',
+    "crispy_forms",
+    "crispy_bootstrap5",
     
 ]
 
@@ -67,6 +69,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'product.context_processors.count',
             ],
         },
     },
@@ -134,6 +137,10 @@ MEDIA_ROOT = BASE_DIR / "media"
 MEDIA_URL = "/media/"
 
 
+LOGIN_REDIRECT_URL ='home'
+LOGIN_URL='login'
+
+
 CKEDITOR_CONFIGS = {
     'default': {
         'skin': 'moono',
@@ -198,3 +205,8 @@ CKEDITOR_CONFIGS = {
         ]),
     }
 }
+
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+
+CRISPY_TEMPLATE_PACK = "bootstrap5"

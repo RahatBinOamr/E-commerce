@@ -34,7 +34,7 @@
               </div>
               <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
                 <h5 class="mb-0">
-                  ${% widthratio p.product.product_current_price 1 p.quantity %}
+                  ৳{% widthratio p.product.product_current_price 1 p.quantity %}
                 </h5>
               </div>
               <div class="col-md-1 col-lg-1 col-xl-1 text-end">
@@ -55,7 +55,7 @@
             <h5 class="card-title">Order Summary</h5>
 
             <hr />
-            <h4>Total: ${{totalPrice}}</h4>
+            <h4>Total: ৳{{totalPrice}}</h4>
             <a href="{% url 'home'  %}">
               <button class="btn btn-success btn-block mt-3 me-2">
                 Back to shop

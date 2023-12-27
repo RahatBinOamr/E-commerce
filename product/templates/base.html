@@ -147,6 +147,8 @@
                 </a>
               </div>
 
+              {% if user.is_authenticated %}
+
               <div class="nav-item dropdown">
                 <a
                   class="nav-link dropdown-toggle"
@@ -157,20 +159,27 @@
                   aria-haspopup="true"
                   aria-expanded="false"
                 >
+                  {% if user.profile %}
                   <img
-                    src="{{ user_profile.profile_image.url }}"
-                    class=" rounded-circle"
+                    src="{{ user.profile.profile_image.url }}"
+                    class="rounded-circle"
                     style="width: 40px; height: 40px"
                     alt=""
                   />
+                  {% else %}
+                  <i class="fas fa-user-alt m-1 me-md-2"></i>
+                  {% endif %}
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                   <!-- Add dropdown items here, such as profile, settings, logout, etc. -->
                   <a class="dropdown-item" href="{% url 'profile' %}"
                     >Profile</a
                   >
+                  <a class="dropdown-item" href="{% url 'product_collection' %}"
+                    >product-collection</a
+                  >
                   <div class="dropdown-divider"></div>
-                  {% if user_authenticated and user_active %}
+                  {% if user.is_authenticated %}
                   <div>
                     <a
                       href=" {% url 'logout' %} "
@@ -195,6 +204,17 @@
                   {% endif %}
                 </div>
               </div>
+              {% else %}
+              <div>
+                <a
+                  href=" {% url 'login' %} "
+                  class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center"
+                >
+                  <i class="fas fa-user-alt m-1 me-md-2"></i>
+                  <p class="d-none d-md-block mb-0">Sign in</p>
+                </a>
+              </div>
+              {% endif %}
             </div>
           </div>
         </div>

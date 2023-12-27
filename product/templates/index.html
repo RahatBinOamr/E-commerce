@@ -2,7 +2,7 @@
 <section class="container">
   {% include "banner.html" %}
   <div class="row mt-5">
-    <div class="col-3">
+    <div class="col-3 d-none d-md-block">
       <form method="get" action="">
         <h3>Category:</h3>
         {% for category in categories %}
@@ -55,10 +55,17 @@
         <button class="btn btn-info" type="submit">Filter</button>
       </form>
     </div>
-    <div class="col-9">
+    <div class="col-9 clo-md-12">
+      <div class="d-flex justify-content-between">
+        <h3>All Products</h3>
+        {% include "pagination.html" %}
+      </div>
       {% include "product.html" %} <br />
-      <br />
-      {% include "pagination.html" %}
+     <div class="mt-4">
+       <h3 class="mt-4 mb-3">Up_Coming Product</h3>
+      {% include "upcoming.html" %}
+     </div>
+      
     </div>
   </div>
 </section>

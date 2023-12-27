@@ -34,7 +34,7 @@
           </div>
 
           <div class="mb-3">
-            <span class="h5">${{product.product_current_price}}</span>
+            <span class="h5">৳{{product.product_current_price}}</span>
             
           </div>
 
@@ -102,6 +102,7 @@
           <!-- Pills content -->
         </div>
       </div>
+      {% if related_product %}
       <div class="col-lg-4">
         <div class="px-0 border rounded-2 shadow-0">
           <div class="card">
@@ -121,7 +122,7 @@
                   <a href="{% url 'Product_Details' product.id %}" class="nav-link mb-1">
                     {{product.product_title}}
                   </a>
-                  <strong class="text-dark"> ${{product.product_current_price}}</strong>
+                  <strong class="text-dark"> ৳{{product.product_current_price}}</strong>
                 </div>
                 
               </div>
@@ -131,16 +132,17 @@
           </div>
         </div>
       </div>
+{% endif %}
     </div>
   </div>
   <!-- Add a new review form -->
     <div>
-       <h3 class="mb-2">Reviews</h3>
+     {% if reviews %}  <h3 class="mb-2">Reviews</h3>
   {% for review in reviews %}
   
 <div class="d-flex align-items-center">
-                {% if review.profile.profile_image.url %}
-                <img src="{{ review.profile.profile_image.url }}" alt="User Image" class="img-fluid rounded-circle mb-3 me-2"
+                {% if review.user.profile.profile_image.url %}
+                <img src="{{ review.user.profile.profile_image.url }}" alt="User Image" class="img-fluid rounded-circle mb-3 me-2"
                 style="width:50px; height:50px"
                 >
                 {% else %}
@@ -151,7 +153,7 @@
                     {{ review.comment }}
                 </p></div>
             </div>
-  {% endfor %}
+  {% endfor %}{% endif %}
 
 
   
