@@ -1,0 +1,98 @@
+<h3 class="mt-4 mb-3">Laptop</h3>
+<section>
+  <div class="container mt-5">
+    <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          {% if laptop %}
+
+          <div class="row g-3">
+            {% for product in laptop %}
+            <div class="col-md-12 col-lg-4 mb-4 mb-lg-0">
+              <div class="card h-100">
+                <div class="d-flex justify-content-between p-3">
+                  <p class="lead mb-0">Today's Combo Offer</p>
+                  <div
+                    class="bg-danger rounded-circle d-flex align-items-center justify-content-center shadow-1-strong"
+                    style="width: 35px; height: 35px"
+                  >
+                    <p class="text-white mb-0 small">
+                      {{product.product_offer}}%
+                    </p>
+                  </div>
+                </div>
+                <a href="{% url 'Product_Details' product.id %}">
+                  <img
+                    src="/media/{{product.product_image}}"
+                    class="card-img-top"
+                    alt=""
+                  />
+                </a>
+                <div class="card-body">
+                  <div class="d-flex justify-content-between">
+                    <p class="small">
+                      <span>৳{{product.product_current_price}} </span>
+                    </p>
+                    <p class="small text-danger">
+                      <s>৳{{product.product_previous_price}}</s>
+                    </p>
+                  </div>
+
+                  <div class="d-flex justify-content-between mb-3">
+                    <h5 class="mb-0">{{product.product_title}}</h5>
+                  </div>
+
+                  <div class="d-flex justify-content-between mb-2">
+                    <p class="text-muted mb-0">
+                      status:
+                      <span class="fw-bold">{{product.product_status}}</span>
+                    </p>
+                    <div class="ms-auto text-warning">
+                      <i class="fa fa-star"></i>
+                      <i class="fa fa-star"></i>
+                      <i class="fa fa-star"></i>
+                      <i class="fa fa-star"></i>
+                      <i class="fa fa-star"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          {% else %}:
+          <div>
+            <h3 class="text-danger">product not found</h3>
+            <a href="{% url 'home'  %}">
+              <button class="btn btn-info btn-block mt-3 me-2">
+                Back to shop
+              </button>
+            </a>
+          </div>
+
+          {% endif %}
+        </div>
+
+        <!-- Add more carousel items as needed -->
+      </div>
+      <button
+        class="carousel-control-prev"
+        type="button"
+        data-bs-target="#carouselExample"
+        data-bs-slide="prev"
+      >
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button
+        class="carousel-control-next"
+        type="button"
+        data-bs-target="#carouselExample"
+        data-bs-slide="next"
+      >
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+  </div>
+</section>

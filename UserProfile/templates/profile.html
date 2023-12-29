@@ -16,7 +16,6 @@
           <p><strong>Email:</strong> {{ user.email }}</span></p>
           <p><strong>Name:</strong> {{ user.username }}</span></p>
           <p><strong>Phone:</strong> {{ user.profile.mobile_number }} </span></p>
-         
           <p><strong>Address:</strong> {{ user.profile.address }}</span></p>
           <a href="{% url 'update_profile' %}">
         <button class="btn btn-info">Update Profile</button></a>

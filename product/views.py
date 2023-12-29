@@ -56,12 +56,17 @@ def HomePage(request):
 
     # Upcoming Product
     upcoming = Product.objects.filter(product_status__status="Up-Comming")
+    mobile = Product.objects.filter(product_category__category_name="Mobile")
+    laptop = Product.objects.filter(product_category__category_name="Laptop")
+
     context={
         'brands':brands,
         'categories':categories,
         'statuses':statuses,
         'products':products,
         'upcoming':upcoming,
+        'mobile':mobile,
+        'laptop':laptop,
     
     }
     return render(request, 'index.html',context)
@@ -89,14 +94,13 @@ def Product_DetailsPage(request,pk=None):
     context={
         'product':product,
         'related_product':related_product,
-  
         'form':form,
         'reviews':reviews,
         
     }
     return render(request,'product_details.html',context)
 
-
+@login_required
 def Add_To_Cart(request,pk=None):
     product= Product.objects.get(pk=pk)
     cart_item, created = CartItem.objects.get_or_create( user=request.user,product=product)
@@ -164,7 +168,8 @@ def check_out_cart(request):
 
 
 
-
+def not_found(request,exception):
+    return render(request,'notfound.html')
 
 
 
